@@ -3,6 +3,7 @@ import React from 'react';
 import { Component } from 'react';
 
 import Statistics from './Statistics/Statistics'
+import FeedbackOptions from './FeedbackOptions/FeedbackOptions';
 // import Section from './Section';
 // import FeedbackOptions from './FeedbackOptions'
 
@@ -48,7 +49,7 @@ import Statistics from './Statistics/Statistics'
          {/* <Section     title ="Please leav feedback">
  <FeedbackOptions options={['good','neitral', 'bed']}/>  
    </Section> */}
-         <div>
+         {/* <div>
            <h2>Please Leave feedback</h2>
            <button type="button" onClick={this.goooIncrement}>
              good
@@ -59,7 +60,9 @@ import Statistics from './Statistics/Statistics'
            <button type="button" onClick={this.badIncrement}>
              bad
            </button>
-         </div>
+         </div> */}
+
+         <FeedbackOptions options={['good','neitral', 'bed']} ></FeedbackOptions>
 
          <Statistics
            good={this.state.good}
