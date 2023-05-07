@@ -1,91 +1,83 @@
+import PropTypes from 'prop-types';
+
 import React from 'react';
 
 import { Component } from 'react';
+import Notification from './Notification/Notification';
+import Section from './Section/Section';
+import Statistics from './Statistics/Statistics';
+import FeedbackOptions from './FeedbackOptions/FeedbackOptions.jsx';
 
-import Statistics from './Statistics/Statistics'
-import FeedbackOptions from './FeedbackOptions/FeedbackOptions';
-// import Section from './Section';
-// import FeedbackOptions from './FeedbackOptions'
+class App extends Component {
+  state = {
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  };
 
+  countTotalFeedback = (state) => {
+    return state.good + state.neutral + state.bad;
+  };
 
- class App extends Component {
-   state = {
-     good: 0,
-     neutral: 0,
-     bad: 0,
-   };
+ 
 
-   goooIncrement = () => {
+  countPositiveFeedbackPercentage = (state) => {
+    if (this.countTotalFeedback(state) === 0) {
+      return 0;
+    }
+    return Math.floor(
+      (state.good / (state.good + state.neutral + state.bad)) * 100
+    );
+  };
+  handleCounter = ({ target: { name } }) => {
     this.setState(prevState => ({
-      good: prevState.good + 1
-    }))
-   };
-
-   neutralIncrement = () => {
-     this.setState(prevState => ({
-       neutral: prevState.neutral + 1,
-     }));
-   };
-
-   badIncrement = () => {
-    this.setState(prevState => ({
-      bad: prevState.bad + 1,
+      [name]: prevState[name] + 1,
     }));
-   };
+  };
 
-   countTotalFeedback = (state) => {
-    return state.good + state.neutral + state.bad 
-    
-   }
+  render() {
+    return (
+      <>
+        <Section title={'Please leave feedback'}>
+          <FeedbackOptions
+            options={['good', 'neutral', 'bad']}
+            onLeaveFeedback={this.handleCounter}
+          ></FeedbackOptions>
+        </Section>
+        <Section title={'Statistics'}>
+          {this.countTotalFeedback(this.state) > 0 ? (
+            <Statistics
+              good={this.state.good}
+              neutral={this.state.neutral}
+              bad={this.state.bad}
+              total={this.countTotalFeedback(this.state)}
+              positivePercentage={this.countPositiveFeedbackPercentage(
+                this.state
+              )}
+            ></Statistics>
+          ) : (
+            <Notification message={'There is feedback'} />
+          )}
+        </Section>
+      </>
+    );
+  }
+}
 
-   countPositiveFeedbackPercentage = (state) => {
-  return Math.floor((state.good/(state.good + state.neutral + state.bad ))*100)
-   };
+
+FeedbackOptions.propTypes = {
+  options: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onLeaveFeedback: PropTypes.func,
+};
 
 
-   render() {
-     return (
-       <>
-         {/* <Section     title ="Please leav feedback">
- <FeedbackOptions options={['good','neitral', 'bed']}/>  
-   </Section> */}
-         {/* <div>
-           <h2>Please Leave feedback</h2>
-           <button type="button" onClick={this.goooIncrement}>
-             good
-           </button>
-           <button type="button" onClick={this.neutralIncrement}>
-             neutral
-           </button>
-           <button type="button" onClick={this.badIncrement}>
-             bad
-           </button>
-         </div> */}
+Statistics.propTypes = {
+  good: PropTypes.number.isRequired,
+  neutral: PropTypes.number.isRequired,
+  bad: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
+  positivePercentage: PropTypes.number.isRequired,
+};
 
-         <FeedbackOptions options={['good','neitral', 'bed']} ></FeedbackOptions>
 
-         <Statistics
-           good={this.state.good}
-           neutral={this.state.neutral}
-           bad={this.state.bad}
-           total={this.countTotalFeedback(this.state)}
-           positivePercentage={this.countPositiveFeedbackPercentage(this.state)}
-         ></Statistics>
-
-         {/* <div>
-           <h2>Statistics</h2>
-
-           <span>good:{this.state.good} </span>
-           <span>neutral:{this.state.neutral} </span>
-           <span>bad:{this.state.bad} </span>
-
-           <span>total:{this.countTotalFeedback(this.state)} </span>
-
-           <span>Positive feedback:{this.countPositiveFeedbackPercentage(this.state)} %</span>
-         </div> */}
-       </>
-     );
-   }
- }
-
- export default App
+export default App;
