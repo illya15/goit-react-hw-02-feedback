@@ -45,7 +45,7 @@ class App extends Component {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            fontSize: 40,
+            // fontSize: 40,
             color: '#010101',
           }}
         >
